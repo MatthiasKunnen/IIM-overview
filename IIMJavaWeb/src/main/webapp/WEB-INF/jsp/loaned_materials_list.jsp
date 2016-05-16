@@ -1,59 +1,50 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix = "form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<t:_layout title="Uitgeleende materialen - IIM">
+    <jsp:attribute name="body_area">
 
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <spring:url value="/css/style.css" var="urlCss"/>
-        <link rel="stylesheet" href="${urlCss}" type="text/css" />
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-        <title>Uitgeleende materialen</title>
-
-    </head>
-    <body>
-
-        <c:url var="currentlyLendOut" value="lendOutMaterials.htm"/>
-        Geef de gewenste datum
-        <form action="${currentlyLendOut}" method="get">
-            <input id="datepicker" type="text" name="date" value="${date}"required="true">
-            <input type="submit" value="Vernieuwen" />
+        <h1>Gewenste datum</h1>
+        <form action="lendOutMaterials" class="form-inline search-function hijax" method="get">
+            <div class="form-group">
+                <label class="sr-only" for="datepicker">Datum:</label>
+                <input id="datepicker" type="text" class="form-control" name="date" value="${date}" placeholder="Datum" required="required">
+            </div>
+            <input type="submit" class="btn btn-default" value="Vernieuw">
         </form>
 
-        <table>
-            <tr>
-                <th>No.</th>
-                <th colspan="3">Materiaal</th>                
-            </tr>
-            <c:forEach items="${materialDetails}" var="entry" varStatus="status">
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>${status.count}</td>
-                    <td colspan="3">${entry.key.name}</td>                    
+                    <th>Materiaal</th>
+                    <th>Gebruiker</th>
+                    <th>Aantal</th>
+                    <th>Terugbrengdatum</th>
                 </tr>
-                <c:forEach items="${entry.value}" var="item">
-                    <tr class="detail">
-                        <td colspan="2">${item.user.name}</td>
-                        <td>${item.amount}</td>
-                        <c:if test="${item.late}">
-                            <td class="late">${item.endDate}</td>
-                        </c:if>
-                        <c:if test="${!item.late}">
-                            <td>${item.endDate}</td>
-                        </c:if>
-
-                    </tr>
+            </thead>
+            <tbody>
+                <c:forEach items="${materialDetails}" var="entry" varStatus="status">
+                    <c:forEach items="${entry.value}" var="item" varStatus="itemStatus">
+                        <tr>
+                            <c:if test="${itemStatus.index == 0}">
+                                <td rowspan="${fn:length(entry.value)}" class="text-center" style="vertical-align: middle;">${entry.key.name}</td>
+                            </c:if>
+                            <td>${item.user.name}</td>
+                            <td>${item.amount}</td>
+                            <td <c:if test="${item.late}"> class="late"</c:if>>${item.endDate}</td>
+                        </tr>
+                    </c:forEach>
                 </c:forEach>
-
-            </c:forEach>
-
+            </tbody>
         </table>
 
         <spring:url value="/scripts" var="scriptUrl"/>
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
         <script src="${scriptUrl}/date-picker.js"></script>
+    </jsp:attribute>
 
-    </body>
-</html>
+</t:_layout>

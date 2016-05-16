@@ -3,6 +3,7 @@
 <%@attribute name="title"%>
 <%@attribute name="head_area" fragment="true" %>
 <%@attribute name="body_area" fragment="true" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
     <head>
         <meta charset="utf-8">
@@ -11,7 +12,9 @@
         <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-        <jsp:invoke fragment="head_area"/>
+        <spring:url value="/css/style.css" var="urlCss"/>
+        <link rel="stylesheet" href="${urlCss}" type="text/css" />
+        <jsp:invoke fragment="head_area"/>     
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top">
