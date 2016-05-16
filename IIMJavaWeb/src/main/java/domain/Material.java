@@ -10,19 +10,18 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Material implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    private Long id;
+    private int id;
 
     private String name;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

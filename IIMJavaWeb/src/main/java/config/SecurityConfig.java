@@ -19,24 +19,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .jdbcAuthentication().dataSource(dataSource)
-                .usersByUsernameQuery("select name, password,true from administrator where name=?");
-                //.authoritiesByUsernameQuery("select name, role from user_roles where username=?");
+                .usersByUsernameQuery("select name, password, true from administrator where name=?")
+                .authoritiesByUsernameQuery("select name,'default' from administrator where name=?");
 //                .inMemoryAuthentication()
 //                .withUser("Pol").password("123").roles("ADMIN");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http.formLogin().
                 defaultSuccessUrl("/welcome").
                 loginPage("/login");
 
         http.authorizeRequests()
-                .antMatchers("/welcome*").authenticated()
+                .antMatchers("/welcome*").hasAuthority("default")
                 .and()
-                .exceptionHandling().accessDeniedPage("/403")
+                .csrf()
                 .and()
-                .csrf();
+                .exceptionHandling().accessDeniedPage("/403");
     }
 }

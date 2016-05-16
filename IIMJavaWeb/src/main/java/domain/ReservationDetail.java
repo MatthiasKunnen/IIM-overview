@@ -8,13 +8,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
-@Entity
+@Entity(name = "reservation_detail")
 public class ReservationDetail implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
-    private Long id;
+    private int id;
 
     private int amount;
     @ManyToOne
@@ -22,11 +22,11 @@ public class ReservationDetail implements Serializable {
     @ManyToOne
     private Reservation reservation;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

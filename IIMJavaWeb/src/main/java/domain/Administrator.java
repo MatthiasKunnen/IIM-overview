@@ -12,11 +12,11 @@ public class Administrator implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
-    private Long id;
+    private int id;
     private String name;
     private String password;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
