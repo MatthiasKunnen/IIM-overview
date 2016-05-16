@@ -70,3 +70,6 @@ tr:nth-child(2n){
     background-color: #E2E2E2;
 }
 
+.late{
+    color: red;
+}
