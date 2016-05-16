@@ -14,7 +14,7 @@
         <div>  
             <h3>Acties</h3>
 
-            <c:url var="currentlyLendOut" value="lists/pickupmaterials.htm"/>
+            <c:url var="currentlyLendOut" value="lists/lendOutMaterials.htm"/>
             <a href="${currentlyLendOut}">Bekijk de momenteel uitgeleende materialen</a>
 
             <c:url var="overviewByDay" value="lists/bringbackmaterials.htm"/>

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -21,7 +20,7 @@ public class Reservation implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     private int id;
-
+    
     private LocalDateTime startDate, endDate, broughtBackDate, pickUpDate;
     
     @ManyToOne

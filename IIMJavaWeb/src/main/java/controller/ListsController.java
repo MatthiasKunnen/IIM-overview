@@ -1,16 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
+import domain.Material;
 import domain.Reservation;
+import domain.ReservationDetail;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,43 +18,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.ReservationDao;
+import viewmodels.ReturnDetailsViewModel;
 
-/**
- *
- * @author matthiasseghers
- */
 @Controller
-@RequestMapping(value = "/lists")
+@RequestMapping(value = "/lists*")
 public class ListsController {
 
     @Autowired
     private ReservationDao reservationDao;
 
-    @RequestMapping(value = "/pickupmaterials", method = RequestMethod.GET)
-    public String pickupMaterialsToday(Model model) {
-
-        //<editor-fold  defaultstate="collapsed" desc="Volgende maandag berekenen">
-        GregorianCalendar date = new GregorianCalendar(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
-        while (date.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
-            date.add(Calendar.DATE, 1);
+    @RequestMapping(value = "/lendOutMaterials", method = RequestMethod.GET)
+    public String getLendOutMaterials(@RequestParam(value = "date", required = false) LocalDateTime date, Model model) {
+        if (date == null) {
+            date = LocalDateTime.now();
         }
-//</editor-fold>
-
-        model.addAttribute("reservation", new Reservation());
+        final LocalDateTime pickedDate = date;
         List<Reservation> reservations = reservationDao.findAll();
-        List<Reservation> listForToday = new ArrayList<>();
-        for (Reservation r : reservations) {
-            //Date.valueOf(LocalDate.now())
-            if (r.getStartDate()
-                    .equals(date.getTime())) {
-                listForToday.add(r);
-            }
-        }
+        Map<Material, List<ReturnDetailsViewModel>> result = reservations.stream()
+                .filter(r -> r.getStartDate().isBefore(pickedDate) && r.getEndDate().isAfter(pickedDate))
+                .map(r -> r.getReservationDetails())
+                .flatMap(rd -> rd.stream())
+                .collect(Collectors.groupingBy(ReservationDetail::getMaterial, Collectors.mapping(rd-> new ReturnDetailsViewModel(rd.getReservation().getUser(), rd.getReservation().getEndDate(), rd.getReservation().getBroughtBackDate()), Collectors.toList())));
 
-        model.addAttribute("date", date.getTime());
-        model.addAttribute("reservationList", listForToday);
-
-        return "pickupList";
+        model.addAttribute("materialDetails", result);
+        
+        return "loaned_materials_list";
     }
 
     @RequestMapping(value = "/bringbackmaterials", method = RequestMethod.GET)
