@@ -26,6 +26,7 @@ public class ListsController {
     @Autowired
     private ReservationDao reservationDao;
 
+
     @RequestMapping(value = "/lendOutMaterials")
     public String getLendOutMaterials(@RequestParam(value = "date", required = false) String date, Model model) {
         final LocalDate pickedDate = date == null ? LocalDate.now() : LocalDate.parse(date);
@@ -35,7 +36,7 @@ public class ListsController {
                         -> (r.getLocalStartDate().isBefore(pickedDate) || r.getLocalStartDate().isEqual(pickedDate))
                         && (r.getLocalEndDate().isAfter(pickedDate) || r.getLocalEndDate().isEqual(pickedDate)))
                 .flatMap(rd -> rd.getReservationDetails().stream())
-                .collect(groupingBy(ReservationDetail::getMaterial, mapping(rd -> createReturnDetailsViewmodel(rd, pickedDate), toList())));
+                .collect(groupingBy(ReservationDetail::getMaterial, mapping(rd -> createReturnDetailsViewmodel(rd), toList())));
 
         model.addAttribute("date", date);
         model.addAttribute("materialDetails", result);
@@ -43,7 +44,7 @@ public class ListsController {
         return "loaned_materials_list";
     }
 
-    private ReturnDetailsViewModel createReturnDetailsViewmodel(ReservationDetail rd, LocalDate pickedDate) {
+    private ReturnDetailsViewModel createReturnDetailsViewmodel(ReservationDetail rd) {
 
         ReturnDetailsViewModel model = new ReturnDetailsViewModel();
 
@@ -51,10 +52,11 @@ public class ListsController {
         model.setBroughtBackDate(rd.getReservation().getLocalBroughtBackDate());
         model.setEndDate(rd.getReservation().getLocalEndDate());
         model.setUser(rd.getReservation().getUser());
-        model.setLate((rd.getReservation().getBroughtBackDate() == null && model.getEndDate().isBefore(pickedDate)));
+        model.setLate((rd.getReservation().getBroughtBackDate() == null && model.getEndDate().isBefore(LocalDate.now())));
 
         return model;
     }
+
 
     @RequestMapping(value = "/pickupList")
     public String getPickupList(@RequestParam(value = "date", required = false) String date, Model model) {

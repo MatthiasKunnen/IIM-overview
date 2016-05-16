@@ -10,11 +10,13 @@
         <title>Op te halen materialen</title>
         <spring:url value="/css/style.css" var="urlCss"/>
         <link rel="stylesheet" href="${urlCss}" type="text/css" />
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     </head>
     <body>
+         <c:url var="pickupList" value="pickupList.htm"/>
         De reserveringen met startdatum:
-        <form method="post" action="">
-            <input type="datepicker" name="date" value="${date}" />
+        <form method="post" action="pickupList">
+            <input id="datepicker" type="text" name="date" value="${date}" required="true" />
             <button type="submit">Vernieuw</button>
         </form>
         <table>
@@ -39,5 +41,10 @@
                 </c:forEach>
             </tbody>
         </table>
+
+        <spring:url value="/scripts" var="scriptUrl"/>
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <script src="${scriptUrl}/date-picker.js"></script>
     </body>
 </html>

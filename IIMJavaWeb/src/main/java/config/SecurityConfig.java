@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 loginPage("/login");
 
         http.authorizeRequests()
-                .antMatchers("/welcome*").hasAuthority("default")
+                .antMatchers("/welcome*","/lists*").hasAuthority("default")
                 .and()
                 .csrf()
                 .and()
