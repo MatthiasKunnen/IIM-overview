@@ -39,12 +39,27 @@ public class ListsController {
                 .map(r -> r.getReservationDetails())
                 .flatMap(rd -> rd.stream())
                 .collect(Collectors.groupingBy(ReservationDetail::getMaterial,
-                        Collectors.mapping(rd -> new ReturnDetailsViewModel(rd.getReservation().getUser(), rd.getReservation().getEndDate(), rd.getReservation().getBroughtBackDate()),
+                        Collectors.mapping(rd -> createReturnDetailsViewmodel(rd, pickedDate),
                                 Collectors.toList())));
 
+        
         model.addAttribute("materialDetails", result);
 
         return "loaned_materials_list";
+    }
+    
+    private ReturnDetailsViewModel createReturnDetailsViewmodel(ReservationDetail rd, LocalDateTime pickedDate){
+        
+        
+        ReturnDetailsViewModel model = new ReturnDetailsViewModel();
+        
+        model.setAmount(rd.getAmount());
+        model.setBroughtBackDate(rd.getReservation().getBroughtBackDate());
+        model.setEndDate(rd.getReservation().getEndDate());
+        model.setUser(rd.getReservation().getUser());
+        model.setLate((rd.getReservation().getBroughtBackDate() != null && model.getEndDate().isBefore(pickedDate)));
+        
+        return model;
     }
 
     @RequestMapping(value = "/bringbackmaterials", method = RequestMethod.GET)
