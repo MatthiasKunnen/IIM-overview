@@ -10,7 +10,6 @@
         <spring:url value="/css/style.css" var="urlCss"/>
         <link rel="stylesheet" href="${urlCss}" type="text/css" />
     </head>
-
     <body>
         <!-- <%-- <spring:url value="/scripts/jquery-1.7.1.js" var="jquery_url" /> 
         <spring:url value="/scripts/jquery-ui-1.8.16.custom.min.js" var="jquery_ui_url" />          
@@ -33,24 +32,24 @@
             <form:errors path="startDate" cssClass="error"/>
             <input type="submit" align="center" value="Save"/>
         </form:form>--%>-->
-        <jsp:useBean id="now" class="java.util.Date" />
-        <p>Dit zijn de materialen die gereserveerd zijn voor <b><fmt:formatDate pattern="dd MMM yy" value="${date}" /></b></p>
+        
+        <p>De reserveringen met startdatum: ${date}</b></p>
         <table>
             <tr>
-                <th>Aantal</th>
+                <th>Gebruiker</th>
                 <th>Materiaal</th>
-                <th>Plaats</th>
-                <th>Gereserveerd door</th>
+                <th>Aantal</th>
             </tr>
-            <c:forEach items="${reservationList}" var="reservation" varStatus="status">
-                <c:forEach items="${reservation.getReservationDetails()}" var="detail" varStatus="status">
-                    <tr>
+            <c:forEach items="${reservationList}" var="entry" varStatus="status">
+                <tr>
+                    <c:if test="${status.index = 0}">
+                        <td rowspan="${entry.Values.size()}">${entry.Key.getName()}</td>
+                    </c:if>
+                    <c:forEach items="${entry.Values}" var="detail">
+                        <td>${detail.materialName}</td>
                         <td>${detail.amount}</td> 
-                        <td>${detail.getMaterial().getName()}</td>
-                        <td>${detail.getMaterial().getPlaats()}</td>
-                        <td><c:out value="${reservation.user.getFirstname()} ${reservation.user.getLastname()}"/></td>
-                    </tr>
-                </c:forEach>
+                    </c:forEach>
+                </tr>
             </c:forEach>
         </table>
     </body>

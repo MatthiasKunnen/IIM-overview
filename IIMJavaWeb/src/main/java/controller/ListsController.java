@@ -3,14 +3,14 @@ package controller;
 import domain.Material;
 import domain.Reservation;
 import domain.ReservationDetail;
+import domain.User;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.ReservationDao;
+import viewmodels.PickupDetailsViewModel;
 import viewmodels.ReturnDetailsViewModel;
 
 @Controller
@@ -62,30 +63,22 @@ public class ListsController {
         return model;
     }
 
-    @RequestMapping(value = "/bringbackmaterials", method = RequestMethod.GET)
-    public String bringMaterialsToday(Model model) {
-
-        //<editor-fold  defaultstate="collapsed" desc="Volgende vrijdag berekenen">
-        GregorianCalendar date = new GregorianCalendar(LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
-        while (date.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY) {
-            date.add(Calendar.DATE, 1);
+    @RequestMapping(value = "/pickupList", method = RequestMethod.GET)
+    public String getPickupList(@RequestParam(value = "date", required = false) LocalDate date, Model model) {
+        if (date == null) {
+            date = LocalDate.now();
         }
-//</editor-fold>
-
-        model.addAttribute("reservation", new Reservation());
-        List<Reservation> reservations = reservationDao.findAll();
-        List<Reservation> listForToday = new ArrayList<>();
-        for (Reservation r : reservations) {
-            //Date.valueOf(LocalDate.now())
-            if (r.getEndDate().equals(date.getTime())) {
-                listForToday.add(r);
-            }
-        }
-
-        model.addAttribute("date", date.getTime());
-        model.addAttribute("reservationList", listForToday);
-
-        return "pickupList";
+        
+        final LocalDate pickedDate = date;
+        
+        Map<User, List<PickupDetailsViewModel>> reservations = reservationDao.findAll().stream()
+                .filter(r -> r.getStartDate().toLocalDate().equals(pickedDate))
+                .flatMap(rd -> rd.getReservationDetails().stream())
+                .collect(groupingBy(rd -> rd.getReservation().getUser(), 
+                        mapping(rd -> new PickupDetailsViewModel(rd.getMaterial().getName(), rd.getAmount()), toList())));
+                
+        model.addAttribute("date", date);
+        model.addAttribute("reservationList", reservations);
+        return "pickup_list";
     }
-
 }

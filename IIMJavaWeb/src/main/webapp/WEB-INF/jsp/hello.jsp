@@ -17,8 +17,7 @@
             <c:url var="currentlyLendOut" value="lists/lendOutMaterials.htm"/>
             <a href="${currentlyLendOut}">Bekijk de momenteel uitgeleende materialen</a>
 
-            <c:url var="overviewByDay" value="lists/bringbackmaterials.htm"/>
-            <a href="${overviewByDay}">Bekijk de klaar te leggen materialen</a>
+            <a href="lists/pickupList">Bekijk de klaar te leggen materialen</a>
 
             <c:url var="logoutUrl" value="/logout"/>
             <form action="${logoutUrl}" method="post">
