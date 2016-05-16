@@ -4,7 +4,9 @@ import domain.Material;
 import domain.Reservation;
 import domain.ReservationDetail;
 import domain.User;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,14 +31,14 @@ public class ListsController {
     private ReservationDao reservationDao;
 
     @RequestMapping(value = "/lendOutMaterials", method = RequestMethod.GET)
-    public String getLendOutMaterials(@RequestParam(value = "date", required = false) LocalDate date, Model model) {
+    public String getLendOutMaterials(@RequestParam(value = "date", required = false) Date date, Model model) {
         if (date == null) {
-            date = LocalDate.now();
+            date = date = Date.from(Instant.now());;
         }
-        final LocalDate pickedDate = date;
+        final Date pickedDate = date;
         List<Reservation> reservations = reservationDao.findAll();
         Map<Material, List<ReturnDetailsViewModel>> result = reservations.stream()
-                .filter(r -> r.getStartDate().toLocalDate().isBefore(pickedDate) && r.getEndDate().toLocalDate().isAfter(pickedDate))
+                //.filter(r -> r.getStartDate().before(pickedDate) && r.getEndDate().after(pickedDate))
                 .map(r -> r.getReservationDetails())
                 .flatMap(rd -> rd.stream())
                 .collect(Collectors.groupingBy(ReservationDetail::getMaterial,
@@ -49,7 +51,7 @@ public class ListsController {
         return "loaned_materials_list";
     }
     
-    private ReturnDetailsViewModel createReturnDetailsViewmodel(ReservationDetail rd, LocalDate pickedDate){
+    private ReturnDetailsViewModel createReturnDetailsViewmodel(ReservationDetail rd, Date pickedDate){
         
         
         ReturnDetailsViewModel model = new ReturnDetailsViewModel();
@@ -58,21 +60,22 @@ public class ListsController {
         model.setBroughtBackDate(rd.getReservation().getBroughtBackDate());
         model.setEndDate(rd.getReservation().getEndDate());
         model.setUser(rd.getReservation().getUser());
-        model.setLate((rd.getReservation().getBroughtBackDate().toLocalDate() != null && model.getEndDate().toLocalDate().isBefore(pickedDate)));
+        model.setLate((rd.getReservation().getBroughtBackDate() == null && model.getEndDate().before(pickedDate)));
         
         return model;
     }
 
     @RequestMapping(value = "/pickupList", method = RequestMethod.GET)
-    public String getPickupList(@RequestParam(value = "date", required = false) LocalDate date, Model model) {
+    public String getPickupList(@RequestParam(value = "date", required = false) Date date, Model model) {
         if (date == null) {
-            date = LocalDate.now();
+            date = Date.from(Instant.now());
+                    
         }
         
-        final LocalDate pickedDate = date;
+        final Date pickedDate = date;
         
         Map<User, List<PickupDetailsViewModel>> reservations = reservationDao.findAll().stream()
-                .filter(r -> r.getStartDate().toLocalDate().equals(pickedDate))
+                .filter(r -> r.getStartDate().equals(pickedDate))
                 .flatMap(rd -> rd.getReservationDetails().stream())
                 .collect(groupingBy(rd -> rd.getReservation().getUser(), 
                         mapping(rd -> new PickupDetailsViewModel(rd.getMaterial().getName(), rd.getAmount()), toList())));

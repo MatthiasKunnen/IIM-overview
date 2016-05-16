@@ -69,6 +69,13 @@ tr td{
 tr:nth-child(2n){
     background-color: #E2E2E2;
 }
+.detail td{
+    background-color: dodgerblue;
+}
+
+.detail:nth-child(2n){
+    background-color:  beige;
+}
 
 .late{
     color: red;

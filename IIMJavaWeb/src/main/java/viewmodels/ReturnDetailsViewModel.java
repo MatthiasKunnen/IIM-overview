@@ -1,20 +1,20 @@
 package viewmodels;
 
 import domain.User;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class ReturnDetailsViewModel {
 
     private User user;
     private int amount;
-    private LocalDateTime endDate, broughtBackDate;
+    private Date endDate, broughtBackDate;
     private boolean late;
 
     public ReturnDetailsViewModel(){
         
     }
     
-    public ReturnDetailsViewModel(User user, int amount, LocalDateTime endDate, LocalDateTime broughtBackDate, boolean late) {
+    public ReturnDetailsViewModel(User user, int amount, Date endDate, Date broughtBackDate, boolean late) {
         this.user = user;
         this.amount = amount;
         this.endDate = endDate;
@@ -38,19 +38,19 @@ public class ReturnDetailsViewModel {
         this.amount = amount;
     }
 
-    public LocalDateTime getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
-    public LocalDateTime getBroughtBackDate() {
+    public Date getBroughtBackDate() {
         return broughtBackDate;
     }
 
-    public void setBroughtBackDate(LocalDateTime broughtBackDate) {
+    public void setBroughtBackDate(Date broughtBackDate) {
         this.broughtBackDate = broughtBackDate;
     }
 

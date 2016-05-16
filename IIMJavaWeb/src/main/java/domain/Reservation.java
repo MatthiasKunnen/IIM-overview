@@ -1,7 +1,7 @@
 package domain;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,7 +12,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+
 
 @Entity
 public class Reservation implements Serializable {
@@ -22,13 +25,14 @@ public class Reservation implements Serializable {
     @NotNull
     private int id;
     
-    @Column(columnDefinition = "DATETIME")
-    private LocalDateTime startDate, endDate, broughtBackDate, pickUpDate;
+    //@Column(columnDefinition = "DATE")
+    @Temporal(TemporalType.DATE)
+    private Date startDate, endDate, broughtBackDate, pickUpDate;
     
     @ManyToOne
     private User user;
     
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ReservationDetail> reservationDetails;
 
     public int getId() {
@@ -55,35 +59,35 @@ public class Reservation implements Serializable {
         this.reservationDetails = reservationDetails;
     }
 
-    public LocalDateTime getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
-    public LocalDateTime getBroughtBackDate() {
+    public Date getBroughtBackDate() {
         return broughtBackDate;
     }
 
-    public void setBroughtBackDate(LocalDateTime broughtBackDate) {
+    public void setBroughtBackDate(Date broughtBackDate) {
         this.broughtBackDate = broughtBackDate;
     }
 
-    public LocalDateTime getPickUpDate() {
+    public Date getPickUpDate() {
         return pickUpDate;
     }
 
-    public void setPickUpDate(LocalDateTime pickUpDate) {
+    public void setPickUpDate(Date pickUpDate) {
         this.pickUpDate = pickUpDate;
     }
 }

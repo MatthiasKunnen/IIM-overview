@@ -8,6 +8,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <spring:url value="/css/style.css" var="urlCss"/>
+        <link rel="stylesheet" href="${urlCss}" type="text/css" />
         <title>Uitgeleende materialen</title>
     </head>
     <body>
@@ -15,24 +16,22 @@
         <table>
             <tr>
                 <th>No.</th>
-                <th colspan="2">Materiaal</th>
-                <th>Aantal</th>
+                <th colspan="3">Materiaal</th>                
             </tr>
-            <c:forEach items="${materialDetails.keySet}" var="material" varStatus="status">
+            <c:forEach items="${materialDetails}" var="entry" varStatus="status">
                 <tr>
                     <td>${status.count}</td>
-                    <td>${material.name}</td>
-                    <td>${material.amount}</td>
+                    <td colspan="3">${entry.key.name}</td>                    
                 </tr>
-                <c:forEach items="$materialDetails[material]" var="detail">
-                    <tr>
-                        <td colspan="2">${detail.user.name}</td>
-                        <td>${detail.amount}</td>
-                        <c:if test="${detail.late}">
-                            <td class="late">${detail.endDate}</td>
+                <c:forEach items="${entry.value}" var="item">
+                    <tr class="detail">
+                        <td colspan="2">${item.user.name}</td>
+                        <td>${item.amount}</td>
+                        <c:if test="${item.late}">
+                            <td class="late">${item.endDate}</td>
                         </c:if>
-                        <c:if test="${!detail.late}">
-                            <td>${detail.endDate}</td>
+                        <c:if test="${!item.late}">
+                            <td>${item.endDate}</td>
                         </c:if>
 
                     </tr>
