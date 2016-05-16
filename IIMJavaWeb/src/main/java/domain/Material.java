@@ -5,14 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@NamedQueries(
-        @NamedQuery(name = "Material.getCurrentlyLendOut", query = "SELECT m FROM Material m INNER JOIN reservation_detail")
-)
 public class Material implements Serializable {
 
     @Id

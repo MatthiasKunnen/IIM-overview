@@ -7,10 +7,4 @@ public class JpaReservationDao extends GenericDaoJpa<Reservation> implements Res
     public JpaReservationDao() {
         super(Reservation.class);
     }
-
-    @Override
-    public Reservation getReservationWithPickupDateToday() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }

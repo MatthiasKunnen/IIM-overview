@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class GenericDaoJpa<T> implements GenericDao<T> {
 
-    private Class<T> type;
+    private final Class<T> type;
     protected EntityManager em;
 
     public GenericDaoJpa(Class<T> type) {
@@ -36,6 +36,7 @@ public class GenericDaoJpa<T> implements GenericDao<T> {
     public List<T> findAll() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<T> criteria = cb.createQuery(type);
+        criteria.from(type);
         TypedQuery<T> query = em.createQuery(criteria);
         return query.getResultList();
     }

@@ -38,10 +38,12 @@ public class ListsController {
                 .filter(r -> r.getStartDate().isBefore(pickedDate) && r.getEndDate().isAfter(pickedDate))
                 .map(r -> r.getReservationDetails())
                 .flatMap(rd -> rd.stream())
-                .collect(Collectors.groupingBy(ReservationDetail::getMaterial, Collectors.mapping(rd-> new ReturnDetailsViewModel(rd.getReservation().getUser(), rd.getReservation().getEndDate(), rd.getReservation().getBroughtBackDate()), Collectors.toList())));
+                .collect(Collectors.groupingBy(ReservationDetail::getMaterial,
+                        Collectors.mapping(rd -> new ReturnDetailsViewModel(rd.getReservation().getUser(), rd.getReservation().getEndDate(), rd.getReservation().getBroughtBackDate()),
+                                Collectors.toList())));
 
         model.addAttribute("materialDetails", result);
-        
+
         return "loaned_materials_list";
     }
 
