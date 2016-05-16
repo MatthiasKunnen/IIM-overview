@@ -28,14 +28,14 @@ public class ListsController {
     private ReservationDao reservationDao;
 
     @RequestMapping(value = "/lendOutMaterials", method = RequestMethod.GET)
-    public String getLendOutMaterials(@RequestParam(value = "date", required = false) LocalDateTime date, Model model) {
+    public String getLendOutMaterials(@RequestParam(value = "date", required = false) LocalDate date, Model model) {
         if (date == null) {
-            date = LocalDateTime.now();
+            date = LocalDate.now();
         }
-        final LocalDateTime pickedDate = date;
+        final LocalDate pickedDate = date;
         List<Reservation> reservations = reservationDao.findAll();
         Map<Material, List<ReturnDetailsViewModel>> result = reservations.stream()
-                .filter(r -> r.getStartDate().isBefore(pickedDate) && r.getEndDate().isAfter(pickedDate))
+                .filter(r -> r.getStartDate().toLocalDate().isBefore(pickedDate) && r.getEndDate().toLocalDate().isAfter(pickedDate))
                 .map(r -> r.getReservationDetails())
                 .flatMap(rd -> rd.stream())
                 .collect(Collectors.groupingBy(ReservationDetail::getMaterial,
@@ -48,7 +48,7 @@ public class ListsController {
         return "loaned_materials_list";
     }
     
-    private ReturnDetailsViewModel createReturnDetailsViewmodel(ReservationDetail rd, LocalDateTime pickedDate){
+    private ReturnDetailsViewModel createReturnDetailsViewmodel(ReservationDetail rd, LocalDate pickedDate){
         
         
         ReturnDetailsViewModel model = new ReturnDetailsViewModel();
@@ -57,7 +57,7 @@ public class ListsController {
         model.setBroughtBackDate(rd.getReservation().getBroughtBackDate());
         model.setEndDate(rd.getReservation().getEndDate());
         model.setUser(rd.getReservation().getUser());
-        model.setLate((rd.getReservation().getBroughtBackDate() != null && model.getEndDate().isBefore(pickedDate)));
+        model.setLate((rd.getReservation().getBroughtBackDate().toLocalDate() != null && model.getEndDate().toLocalDate().isBefore(pickedDate)));
         
         return model;
     }

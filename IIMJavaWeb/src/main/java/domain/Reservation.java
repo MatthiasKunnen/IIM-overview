@@ -1,9 +1,12 @@
 package domain;
 
+import service.LocalDateTimeConverter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -21,6 +24,7 @@ public class Reservation implements Serializable {
     @NotNull
     private int id;
     
+    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime startDate, endDate, broughtBackDate, pickUpDate;
     
     @ManyToOne
