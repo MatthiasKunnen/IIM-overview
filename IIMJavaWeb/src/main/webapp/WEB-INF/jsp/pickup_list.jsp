@@ -15,9 +15,9 @@
     <body>
          <c:url var="pickupList" value="pickupList.htm"/>
         De reserveringen met startdatum:
-        <form method="post" action="pickupList">
+        <form action="${pickupList}" method="get" >
             <input id="datepicker" type="text" name="date" value="${date}" required="true" />
-            <button type="submit">Vernieuw</button>
+            <button type="submit" value="Vernieuw"/>
         </form>
         <table>
             <thead>

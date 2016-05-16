@@ -11,13 +11,15 @@
         <link rel="stylesheet" href="${urlCss}" type="text/css" />
         <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
         <title>Uitgeleende materialen</title>
-        
+
     </head>
     <body>
 
         <c:url var="currentlyLendOut" value="lendOutMaterials.htm"/>
-        <form action="${currentlyLendOut}" method="post">
-            <p>Date: <input type="text" id="datepicker" name="date" required="true" value="${date}"> <input class="button" type="submit" value="Pas aan" /></p>
+        Geef de gewenste datum
+        <form action="${currentlyLendOut}" method="get">
+            <input id="datepicker" type="text" name="date" value="${date}"required="true">
+            <input type="submit" value="Vernieuwen" />
         </form>
 
         <table>
@@ -52,6 +54,6 @@
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
         <script src="${scriptUrl}/date-picker.js"></script>
-        
+
     </body>
 </html>

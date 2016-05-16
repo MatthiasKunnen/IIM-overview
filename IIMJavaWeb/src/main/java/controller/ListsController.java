@@ -5,6 +5,7 @@ import domain.Reservation;
 import domain.ReservationDetail;
 import domain.User;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import static java.util.stream.Collectors.groupingBy;
@@ -23,13 +24,15 @@ import viewmodels.ReturnDetailsViewModel;
 @RequestMapping(value = "/lists*")
 public class ListsController {
 
+    private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    
     @Autowired
     private ReservationDao reservationDao;
 
 
     @RequestMapping(value = "/lendOutMaterials")
     public String getLendOutMaterials(@RequestParam(value = "date", required = false) String date, Model model) {
-        final LocalDate pickedDate = date == null ? LocalDate.now() : LocalDate.parse(date);
+        final LocalDate pickedDate = date == null ? LocalDate.now() : LocalDate.parse(date,dtf);
         List<Reservation> reservations = reservationDao.findAll();
         Map<Material, List<ReturnDetailsViewModel>> result = reservations.stream()
                 .filter(r
@@ -37,8 +40,8 @@ public class ListsController {
                         && (r.getLocalEndDate().isAfter(pickedDate) || r.getLocalEndDate().isEqual(pickedDate)))
                 .flatMap(rd -> rd.getReservationDetails().stream())
                 .collect(groupingBy(ReservationDetail::getMaterial, mapping(rd -> createReturnDetailsViewmodel(rd), toList())));
-
-        model.addAttribute("date", date);
+        
+        model.addAttribute("date", pickedDate.format(dtf));
         model.addAttribute("materialDetails", result);
 
         return "loaned_materials_list";
@@ -60,14 +63,14 @@ public class ListsController {
 
     @RequestMapping(value = "/pickupList")
     public String getPickupList(@RequestParam(value = "date", required = false) String date, Model model) {
-        final LocalDate pickedDate = date == null ? LocalDate.now() : LocalDate.parse(date);
+        final LocalDate pickedDate = date == null ? LocalDate.now() : LocalDate.parse(date,dtf);
         Map<User, List<PickupDetailsViewModel>> reservations = reservationDao.findAll().stream()
                 .filter(r -> r.getLocalStartDate().isEqual(pickedDate))
                 .flatMap(rd -> rd.getReservationDetails().stream())
                 .collect(groupingBy(rd -> rd.getReservation().getUser(),
                         mapping(rd -> new PickupDetailsViewModel(rd.getMaterial().getName(), rd.getAmount()), toList())));
 
-        model.addAttribute("date", date);
+        model.addAttribute("date", pickedDate.format(dtf));
         model.addAttribute("reservationList", reservations);
         return "pickup_list";
     }
