@@ -38,14 +38,14 @@ public class ListsController {
         final Date pickedDate = date;
         List<Reservation> reservations = reservationDao.findAll();
         Map<Material, List<ReturnDetailsViewModel>> result = reservations.stream()
-                //.filter(r -> r.getStartDate().before(pickedDate) && r.getEndDate().after(pickedDate))
+                .filter(r -> r.getStartDate().before(pickedDate) && r.getEndDate().after(pickedDate))
                 .map(r -> r.getReservationDetails())
                 .flatMap(rd -> rd.stream())
                 .collect(Collectors.groupingBy(ReservationDetail::getMaterial,
                         Collectors.mapping(rd -> createReturnDetailsViewmodel(rd, pickedDate),
                                 Collectors.toList())));
-
         
+        model.addAttribute("date",date);
         model.addAttribute("materialDetails", result);
 
         return "loaned_materials_list";

@@ -9,9 +9,16 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <spring:url value="/css/style.css" var="urlCss"/>
         <link rel="stylesheet" href="${urlCss}" type="text/css" />
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
         <title>Uitgeleende materialen</title>
+        
     </head>
     <body>
+
+        <c:url var="currentlyLendOut" value="lendOutMaterials.htm"/>
+        <form action="${currentlyLendOut}" method="get">
+            <p>Date: <input type="text" id="datepicker" name="date" required="true" value="${date.day}-${date.month}-${date.year}"> <input class="button" type="submit" value="Pas aan" /></p>
+        </form>
 
         <table>
             <tr>
@@ -40,5 +47,11 @@
             </c:forEach>
 
         </table>
+
+        <spring:url value="/scripts" var="scriptUrl"/>
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <script src="${scriptUrl}/date-picker.js"></script>
+        
     </body>
 </html>
