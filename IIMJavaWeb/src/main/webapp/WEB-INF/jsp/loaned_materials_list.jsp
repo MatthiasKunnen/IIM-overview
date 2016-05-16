@@ -17,7 +17,7 @@
 
         <c:url var="currentlyLendOut" value="lendOutMaterials.htm"/>
         <form action="${currentlyLendOut}" method="get">
-            <p>Date: <input type="text" id="datepicker" name="date" required="true" value="${date.day}-${date.month}-${date.year}"> <input class="button" type="submit" value="Pas aan" /></p>
+            <p>Date: <input type="text" id="datepicker" name="date" required="true" value="${date}"> <input class="button" type="submit" value="Pas aan" /></p>
         </form>
 
         <table>

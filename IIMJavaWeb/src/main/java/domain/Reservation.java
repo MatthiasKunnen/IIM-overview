@@ -1,10 +1,10 @@
 package domain;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
+import java.sql.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,10 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-
 
 @Entity
 public class Reservation implements Serializable {
@@ -24,14 +21,12 @@ public class Reservation implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     private int id;
-    
-    //@Column(columnDefinition = "DATE")
-    @Temporal(TemporalType.DATE)
+
     private Date startDate, endDate, broughtBackDate, pickUpDate;
-    
+
     @ManyToOne
     private User user;
-    
+
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ReservationDetail> reservationDetails;
 
@@ -89,5 +84,21 @@ public class Reservation implements Serializable {
 
     public void setPickUpDate(Date pickUpDate) {
         this.pickUpDate = pickUpDate;
+    }
+
+    public LocalDate getLocalStartDate() {
+        return startDate == null ? null : startDate.toLocalDate();
+    }
+
+    public LocalDate getLocalEndDate() {
+        return endDate == null ? null : endDate.toLocalDate();
+    }
+
+    public LocalDate getLocalPickUpDate() {
+        return pickUpDate == null ? null : pickUpDate.toLocalDate();
+    }
+
+    public LocalDate getLocalBroughtBackDate() {
+        return broughtBackDate == null ? null : broughtBackDate.toLocalDate();
     }
 }
