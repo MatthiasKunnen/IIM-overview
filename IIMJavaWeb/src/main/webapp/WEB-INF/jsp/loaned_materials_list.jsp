@@ -16,7 +16,7 @@
     <body>
 
         <c:url var="currentlyLendOut" value="lendOutMaterials.htm"/>
-        <form action="${currentlyLendOut}" method="get">
+        <form action="${currentlyLendOut}" method="post">
             <p>Date: <input type="text" id="datepicker" name="date" required="true" value="${date}"> <input class="button" type="submit" value="Pas aan" /></p>
         </form>
 

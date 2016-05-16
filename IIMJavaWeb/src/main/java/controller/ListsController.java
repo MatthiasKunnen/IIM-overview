@@ -7,7 +7,6 @@ import domain.User;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.ReservationDao;
 import viewmodels.PickupDetailsViewModel;
@@ -28,17 +26,14 @@ public class ListsController {
     @Autowired
     private ReservationDao reservationDao;
 
-    @RequestMapping(value = "/lendOutMaterials", method = RequestMethod.GET)
-    public String getLendOutMaterials(@RequestParam(value = "date", required = false) LocalDate date, Model model) {
-        if (date == null) {
-            date = LocalDate.now();
-        }
-        final LocalDate pickedDate = date;
+    @RequestMapping(value = "/lendOutMaterials")
+    public String getLendOutMaterials(@RequestParam(value = "date", required = false) String date, Model model) {
+        final LocalDate pickedDate = date == null ? LocalDate.now() : LocalDate.parse(date);
         List<Reservation> reservations = reservationDao.findAll();
         Map<Material, List<ReturnDetailsViewModel>> result = reservations.stream()
-                .filter(r -> 
-                        (r.getLocalStartDate().isBefore(pickedDate)|| r.getLocalStartDate().isEqual(pickedDate)) &&
-                        (r.getLocalEndDate().isAfter(pickedDate) || r.getLocalEndDate().isEqual(pickedDate)))
+                .filter(r
+                        -> (r.getLocalStartDate().isBefore(pickedDate) || r.getLocalStartDate().isEqual(pickedDate))
+                        && (r.getLocalEndDate().isAfter(pickedDate) || r.getLocalEndDate().isEqual(pickedDate)))
                 .flatMap(rd -> rd.getReservationDetails().stream())
                 .collect(groupingBy(ReservationDetail::getMaterial, mapping(rd -> createReturnDetailsViewmodel(rd, pickedDate), toList())));
 
@@ -61,14 +56,9 @@ public class ListsController {
         return model;
     }
 
-    @RequestMapping(value = "/pickupList", method = RequestMethod.GET)
-    public String getPickupList(@RequestParam(value = "date", required = false) LocalDate date, Model model) {
-        if (date == null) {
-            date = LocalDate.now();
-        }
-
-        final LocalDate pickedDate = date;
-
+    @RequestMapping(value = "/pickupList")
+    public String getPickupList(@RequestParam(value = "date", required = false) String date, Model model) {
+        final LocalDate pickedDate = date == null ? LocalDate.now() : LocalDate.parse(date);
         Map<User, List<PickupDetailsViewModel>> reservations = reservationDao.findAll().stream()
                 .filter(r -> r.getLocalStartDate().isEqual(pickedDate))
                 .flatMap(rd -> rd.getReservationDetails().stream())
