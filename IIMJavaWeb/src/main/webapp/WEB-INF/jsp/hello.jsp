@@ -14,17 +14,11 @@
         <div>  
             <h3>Acties</h3>
 
-            <c:url var="pickupUrl" value="lists/pickupmaterials.htm"/>
-            <form action="${pickupUrl}" method="get">
-                <input class="button" type="submit" value="Wat moet maandag weg?" />
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>            
-            </form>
+            <c:url var="currentlyLendOut" value="lists/pickupmaterials.htm"/>
+            <a href="${currentlyLendOut}">Bekijk de momenteel uitgeleende materialen</a>
 
-            <c:url var="bringbackUrl" value="lists/bringbackmaterials.htm"/>
-            <form action="${bringbackUrl}" method="get">
-                <input class="button" type="submit" value="Wat moet vrijdag terug?" />
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>            
-            </form>
+            <c:url var="overviewByDay" value="lists/bringbackmaterials.htm"/>
+            <a href="${overviewByDay}">Bekijk de klaar te leggen materialen</a>
 
             <c:url var="logoutUrl" value="/logout"/>
             <form action="${logoutUrl}" method="post">
