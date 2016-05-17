@@ -15,7 +15,7 @@ public class LoginController {
         model.addAttribute("username", principal.getName());
         return "hello";
     }
-
+    
     @RequestMapping(value = "/login")
     public String login(
             @RequestParam(value = "error", required = false) String error, 

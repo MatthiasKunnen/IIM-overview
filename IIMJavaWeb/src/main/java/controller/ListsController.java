@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.ReservationDao;
 import viewmodels.PickupDetailsViewModel;
@@ -24,15 +25,14 @@ import viewmodels.ReturnDetailsViewModel;
 @RequestMapping(value = "/lists*")
 public class ListsController {
 
-    private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    
+    private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     @Autowired
     private ReservationDao reservationDao;
 
-
-    @RequestMapping(value = "/lendOutMaterials")
+    @RequestMapping(value = "/lendOutMaterials", method = {RequestMethod.GET, RequestMethod.POST})
     public String getLendOutMaterials(@RequestParam(value = "date", required = false) String date, Model model) {
-        final LocalDate pickedDate = date == null ? LocalDate.now() : LocalDate.parse(date,dtf);
+        final LocalDate pickedDate = date == null ? LocalDate.now() : LocalDate.parse(date, DATETIME_FORMATTER);
         List<Reservation> reservations = reservationDao.findAll();
         Map<Material, List<ReturnDetailsViewModel>> result = reservations.stream()
                 .filter(r
@@ -40,8 +40,8 @@ public class ListsController {
                         && (r.getLocalEndDate().isAfter(pickedDate) || r.getLocalEndDate().isEqual(pickedDate)))
                 .flatMap(rd -> rd.getReservationDetails().stream())
                 .collect(groupingBy(ReservationDetail::getMaterial, mapping(rd -> createReturnDetailsViewmodel(rd), toList())));
-        
-        model.addAttribute("date", pickedDate.format(dtf));
+
+        model.addAttribute("date", pickedDate.format(DATETIME_FORMATTER));
         model.addAttribute("materialDetails", result);
 
         return "loaned_materials_list";
@@ -60,17 +60,16 @@ public class ListsController {
         return model;
     }
 
-
-    @RequestMapping(value = "/pickupList")
+    @RequestMapping(value = "/pickupList", method = {RequestMethod.GET, RequestMethod.POST})
     public String getPickupList(@RequestParam(value = "date", required = false) String date, Model model) {
-        final LocalDate pickedDate = date == null ? LocalDate.now() : LocalDate.parse(date,dtf);
+        final LocalDate pickedDate = date == null ? LocalDate.now() : LocalDate.parse(date, DATETIME_FORMATTER);
         Map<User, List<PickupDetailsViewModel>> reservations = reservationDao.findAll().stream()
                 .filter(r -> r.getLocalStartDate().isEqual(pickedDate))
                 .flatMap(rd -> rd.getReservationDetails().stream())
                 .collect(groupingBy(rd -> rd.getReservation().getUser(),
                         mapping(rd -> new PickupDetailsViewModel(rd.getMaterial().getName(), rd.getAmount()), toList())));
 
-        model.addAttribute("date", pickedDate.format(dtf));
+        model.addAttribute("date", pickedDate.format(DATETIME_FORMATTER));
         model.addAttribute("reservationList", reservations);
         return "pickup_list";
     }

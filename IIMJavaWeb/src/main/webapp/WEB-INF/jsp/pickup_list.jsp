@@ -8,11 +8,11 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <t:_layout title="Op te halen materialen - IIM">
     <jsp:attribute name="body_area">
-        <h1>De reserveringen met startdatum ${date}</h1>
+        <h1>De reserveringen met volgende startdatum</h1>
         <form action="pickupList" class="form-inline search-function hijax" method="get">
             <div class="form-group">
                 <label class="sr-only" for="datepicker">Datum:</label>
-                <input id="datepicker" type="text" class="form-control" name="date" value="${date}" placeholder="Datum" required="required">
+                <input type="text" class="form-control datepicker" name="date" value="${date}" placeholder="Datum" required="required">
             </div>
             <input type="submit" class="btn btn-default" value="Vernieuw">
         </form>
@@ -48,5 +48,6 @@
         <spring:url value="/scripts" var="scriptUrl"/>
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
         <script src="${scriptUrl}/date-picker.js"></script>
+        <script src="${scriptUrl}/datepicker-nl-BE.js"></script>
     </jsp:attribute>
 </t:_layout>

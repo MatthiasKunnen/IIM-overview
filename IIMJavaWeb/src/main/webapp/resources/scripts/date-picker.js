@@ -1,5 +1,6 @@
 $(function () {
-    $("#datepicker").datepicker({ dateFormat: 'dd-mm-yy' }).setDefaults($.extend($.datepicker.regional['nl']));
+    $.datepicker.setDefaults($.datepicker.regional["nl-BE"]);
+    $(".datepicker").datepicker();
 });
 
 
