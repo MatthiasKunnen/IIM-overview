@@ -16,28 +16,35 @@
             </div>
             <input type="submit" class="btn btn-default" value="Vernieuw">
         </form>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Gebruiker</th>
-                    <th>Materiaal</th>
-                    <th>Aantal</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${reservationList}" var="entry" varStatus="status">
-                    <c:forEach items="${entry.value}" var="detail" varStatus="detailStatus">
+        <c:choose>
+            <c:when test="${reservationList.isEmpty}">
+                Er worden geen reserveringen opgehaald op ${date}.
+            </c:when>
+            <c:otherwise>
+                <table class="table">
+                    <thead>
                         <tr>
-                            <c:if test="${detailStatus.index == 0}">
-                                <td rowspan="${fn:length(entry.value)}" class="text-center" style="vertical-align: middle;">${entry.key.name}</td>
-                            </c:if>
-                            <td>${detail.materialName}</td>
-                            <td>${detail.amount}</td> 
+                            <th>Gebruiker</th>
+                            <th>Materiaal</th>
+                            <th>Aantal</th>
                         </tr>
-                    </c:forEach>
-                </c:forEach>
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${reservationList}" var="entry" varStatus="status">
+                            <c:forEach items="${entry.value}" var="detail" varStatus="detailStatus">
+                                <tr>
+                                    <c:if test="${detailStatus.index == 0}">
+                                        <td rowspan="${fn:length(entry.value)}" class="text-center" style="vertical-align: middle;">${entry.key.name}</td>
+                                    </c:if>
+                                    <td>${detail.materialName}</td>
+                                    <td>${detail.amount}</td> 
+                                </tr>
+                            </c:forEach>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </c:otherwise>
+        </c:choose>
         <spring:url value="/scripts" var="scriptUrl"/>
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
         <script src="${scriptUrl}/date-picker.js"></script>

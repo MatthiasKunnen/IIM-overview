@@ -21,8 +21,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .jdbcAuthentication().dataSource(dataSource)
                 .usersByUsernameQuery("select name, password, true from administrator where name=?")
                 .authoritiesByUsernameQuery("select name,'default' from administrator where name=?");
-//                .inMemoryAuthentication()
-//                .withUser("Pol").password("123").roles("ADMIN");
     }
 
     @Override
@@ -32,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 loginPage("/login");
 
         http.authorizeRequests()
-                .antMatchers("/welcome*","/lists*").hasAuthority("default")
+                .antMatchers("/welcome*", "/lists*").hasAuthority("default")
                 .and()
                 .csrf()
                 .and()

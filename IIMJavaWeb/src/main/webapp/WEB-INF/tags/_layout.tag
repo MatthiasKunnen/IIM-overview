@@ -3,7 +3,9 @@
 <%@attribute name="title"%>
 <%@attribute name="head_area" fragment="true" %>
 <%@attribute name="body_area" fragment="true" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<spring:url value="/" var="root"/>
 <html>
     <head>
         <meta charset="utf-8">
@@ -12,8 +14,7 @@
         <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-        <spring:url value="/css/style.css" var="urlCss"/>
-        <link rel="stylesheet" href="${urlCss}" type="text/css" />
+        <link rel="stylesheet" href="${root}/css/style.css" type="text/css" />
         <jsp:invoke fragment="head_area"/>     
     </head>
     <body>
@@ -25,25 +26,32 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/welcome">IIM</a>
+                    <a class="navbar-brand" href="${root}/welcome">IIM</a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="/lists/lendOutMaterials.htm">Uitleningen</a></li>
-                        <li><a href="/lists/pickupList">Ophalen</a></li>
+                        <li><a href="${root}/lists/lendOutMaterials.htm">Uitleningen</a></li>
+                        <li><a href="${root}/lists/pickupList">Ophalen</a></li>
                     </ul>
-                    <form action="/logout" class="navbar-right" id="logoutForm" method="post">
+                    <form action="${root}/logout" class="navbar-right" id="logoutForm" method="post">
                         <ul class="nav navbar-nav navbar-right">
                             <li>
                                 <a href="#" onclick="return false;" title="Hallo">Hallo !</a>
                             </li>
                             <li><a href="javascript:document.getElementById('logoutForm').submit()">Afmelden</a></li>
                         </ul>
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                     </form>
                 </div>
             </div>
         </div>
         <div class="container body-content">
+            <c:if test="${not empty error}">
+                <div class="alert alert-danger">${error}</div>
+            </c:if>
+            <c:if test="${not empty msg}">
+                <div class="alert alert-success">${msg}</div>
+            </c:if>
             <jsp:invoke fragment="body_area"/>
             <hr>
             <footer class="text-center">

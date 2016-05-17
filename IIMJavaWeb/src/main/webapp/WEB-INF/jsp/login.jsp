@@ -2,43 +2,40 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib prefix = "form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Login Page</title>
-        <spring:url value="/css/style.css" var="urlCss"/>
-        <link rel="stylesheet" href="${urlCss}" type="text/css" />
-    </head>
-
-    <body>
-        <h1>IIM</h1>
-        <div id="login-box">
-            <h3>Log in</h3>
-            <c:if test="${not empty error}">
-                <div class="error">${error}</div>
-            </c:if>
-            <c:if test="${not empty msg}">
-                <div class="msg">${msg}</div>
-            </c:if>
-            <form name='loginForm' action="<c:url value='/login' />" method='POST'>
-                <table>
-                    <tr>
-                        <td>Gebruikersnaam:</td>
-                        <td><input type='text' name='username'></td>
-                    </tr>
-                    <tr>
-                        <td>Wachtwoord:</td>
-                        <td><input type='password' name='password' /></td>
-                    </tr>
-                    <tr>
-                        <td colspan='2'>
-                            <input class="button" name="submit" type="submit" value="Log in" />
-                        </td>
-                    </tr>
-                </table>
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-            </form>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<t:_layout title="Login - IIM">
+    <jsp:attribute name="body_area">
+        <div>
+            <h2>Log in</h2>
+            <div class="row">
+                <div class="col-md-8">
+                    <section id="loginForm">
+                        <form action="<c:url value='/login' />" class="form-horizontal" method="post" role="form" >
+                            <h4>Gebruik uw IIM account om in te loggen</h4>
+                            <hr/>
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="username">Gebruikersnaam</label>
+                                <div class="col-md-10">
+                                    <input class="form-control" data-val="true" data-val-required="Het veld voor de gebruikersnaam is verplicht" id="username" name="username" type="text" value="" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="password">Wachtwoord</label>
+                                <div class="col-md-10">
+                                    <input class="form-control" data-val="true" data-val-required="Het wachtwoordveld is verplicht" id="password" name="password" type="password" autocomplete="off">
+                                    <span class="field-validation-valid text-danger" data-valmsg-for="Password" data-valmsg-replace="true"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Log in" class="btn btn-default">
+                                </div>
+                            </div>
+                        </form>        
+                    </section>
+                </div>
+            </div>
         </div>
-
-    </body>
-</html>
+    </jsp:attribute>
+</t:_layout>

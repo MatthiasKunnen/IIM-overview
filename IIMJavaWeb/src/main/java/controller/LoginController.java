@@ -22,7 +22,7 @@ public class LoginController {
             @RequestParam(value = "logout", required = false) String logout, Model model) {
 
         if (error != null) {
-            model.addAttribute("error", "De ingevoerde gebruikersnaam en wachtwoord kloppen niet!");
+            model.addAttribute("error", "De ingevoerde gegevens zijn incorrect!");
         }
         if (logout != null) {
             model.addAttribute("msg", "Succesvol uitgelogd!");
