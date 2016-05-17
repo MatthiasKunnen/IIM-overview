@@ -26,3 +26,18 @@ body{
 .late{
     color: red;
 }
+
+.home-link{
+    color: black;
+}
+
+.home-link:hover{
+    color: black;
+    text-decoration: none;
+}
+
+.hidden-xs:hover{
+    box-shadow: 2px 2px 2px grey;
+    transition-delay: 3s;
+}
+

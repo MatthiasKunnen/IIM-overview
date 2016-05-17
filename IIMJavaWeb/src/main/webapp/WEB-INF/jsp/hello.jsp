@@ -5,24 +5,22 @@
 <t:_layout title="Home - IIM">
     <jsp:attribute name="body_area">
         <h1>Welkom ${username} op het IIM overzicht!</h1>
-        <div>  
-            <h3>Acties</h3>
 
-            <c:url var="currentlyLendOut" value="lists/lendOutMaterials.htm"/>
-            <form action="${currentlyLendOutUrl}" method="get">
-                <input class="button" type="submit" value="Bekijken" />                          
-            </form>
 
-            <c:url var="pickupUrl" value="lists/pickupList.htm"/>
-            <form action="${pickupUrl}" method="get">
-                <input class="button" type="submit" value="Bekijken" />                            
-            </form> 
+        <c:url var="currentlyLendOut" value="lists/lendOutMaterials.htm"/>
+        <a class="home-link" href="${currentlyLendOut}">
+            <div class="well hidden-xs">
+                <h3>Bekijk de uitgeleende materialen</h3>
+                <p>Hier vind u een lijst van de uitgeleende materialen</p>
+            </div>
+        </a>
 
-            <c:url var="logoutUrl" value="/logout"/>
-            <form action="${logoutUrl}" method="post">
-                <input class="button" type="submit" value="Log uit" />
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>            
-            </form>
-
+        <c:url var="pickupUrl" value="lists/pickupList.htm"/>
+        <a class="home-link" href="${pickupUrl}">
+            <div class="well hidden-xs">
+                <h3>Bekijk de gereserveerde materialen</h3>
+                <p>Hier vind u een lijst van de gereserveerde materialen</p>
+            </div>
+        </a>
     </jsp:attribute>  
 </t:_layout>
